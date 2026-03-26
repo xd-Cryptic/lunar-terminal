@@ -1,0 +1,41 @@
+# ============================================================
+#  Lunar Terminal — Optional AI/ML Packages
+#  These are NOT in core requirements.txt because:
+#   - They are large downloads (1-3 GB)
+#   - Only needed for local ML training & advanced analysis
+#
+#  Install when needed:
+#    pip install -r requirements-ml.txt
+#
+#  Or follow: local_ai_ml_setup.md for full setup guide.
+#
+#  Python 3.14 compatibility notes:
+#   - vectorbt requires Python <=3.11 (numba dependency) — excluded
+#   - pandas-ta requires numba — excluded, use `ta` (in core requirements)
+#   - All packages below verified compatible with Python 3.14
+# ============================================================
+
+# NLP / Sentiment
+keybert>=0.8.5
+sentence-transformers>=3.3.0
+
+# ML Training
+xgboost>=2.1.0
+lightgbm>=4.5.0
+scikit-learn>=1.5.0
+optuna>=4.0.0
+joblib>=1.4.0
+
+# Deep Learning extras (torch already in core requirements.txt)
+torchvision>=0.21.0
+
+# FinBERT / Financial NLP (large download ~500 MB, via HuggingFace)
+# Usage: from transformers import pipeline
+#        p = pipeline("text-classification", model="ProsusAI/finbert")
+
+# ── NOT COMPATIBLE with Python 3.14 ──────────────────────────
+# These packages depend on numba which requires Python <3.14.
+# Use pyenv or conda to create a Python 3.11 env if you need them:
+#
+#   vectorbt==0.26.2        — advanced vectorised backtesting
+#   pandas-ta>=0.4.67b0     — technical analysis (replaced by `ta` lib)

@@ -1,0 +1,47 @@
+# FastAPI & Server
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+websockets>=12.0
+python-dotenv>=1.0.0
+httpx>=0.27.0
+aiohttp>=3.10.0
+
+# Data & Quant  (Python 3.14 compatible)
+numpy>=2.0
+pandas>=2.2.3
+yfinance>=0.2.41
+scipy>=1.14.0
+
+# AI / NLP  (Python 3.14 compatible)
+transformers>=4.44.0
+torch>=2.6.0
+# Note: keybert & sentence-transformers pulled in by transformers
+
+# Backtesting
+# vectorbt requires Python <3.12 — install manually if needed:
+#   pip install vectorbt
+# Alternative: pip install backtesting
+
+# Portfolio Optimisation
+PyPortfolioOpt>=1.5.5
+scikit-learn>=1.5.0
+
+# Technical Analysis (used by IndicatorEngine)
+ta>=0.11.0
+
+# Options Pricing
+mibian==0.1.3
+
+# News & Web
+feedparser>=6.0.11
+beautifulsoup4>=4.12.0
+requests>=2.32.0
+lxml>=5.0.0
+
+# Utils
+pydantic>=2.9.0
+pydantic-settings>=2.5.0
+cachetools>=5.5.0
+
+# Optional heavy ML (install separately via local_ai_ml_setup.md):
+#   pip install vectorbt sentence-transformers keybert xgboost lightgbm optuna
