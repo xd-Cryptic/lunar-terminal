@@ -1,0 +1,50 @@
+/* ── Error / Log Panel ───────────────────────────────────────────── */
+
+.error-panel {
+  position: relative;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: #080c14;
+  border-top: 1px solid #1e293b;
+  font-family: var(--font-mono);
+  z-index: 200;
+  user-select: none;
+}
+
+.error-panel__resize-handle {
+  position: absolute;
+  top: -4px;
+  left: 0; right: 0;
+  height: 10px;
+  cursor: ns-resize;
+  z-index: 201;
+  background: transparent;
+  transition: background 150ms;
+}
+.error-panel__resize-handle:hover { background: rgba(59, 130, 246, 0.2); }
+
+.error-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 10px;
+  border-bottom: 1px solid #1a2332;
+  background: #0a0e1a;
+  flex-shrink: 0;
+  gap: 12px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.error-panel__header::-webkit-scrollbar { height: 0; }
+
+.error-panel__body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.error-panel__body::-webkit-scrollbar        { width: 4px; }
+.error-panel__body::-webkit-scrollbar-track  { background: transparent; }
+.error-panel__body::-webkit-scrollbar-thumb  { background: #1e293b; border-radius: 2px; }

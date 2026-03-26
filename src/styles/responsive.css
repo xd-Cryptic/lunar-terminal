@@ -1,0 +1,785 @@
+/* ================================================================
+   Lunar Terminal — Responsive Scaling Layer
+   Smooth clamp()-based scaling from compact (<1400px) to
+   ultrawide (>2560px) displays. All values flow continuously
+   so the HUD never "jumps" between breakpoints.
+   ================================================================ */
+
+/* ── 1. Viewport-Relative Font Scaling ─────────────────────────── */
+
+:root {
+  /* Base HUD monospace text */
+  --hud-font-base:     clamp(7px, 0.55vw, 11px);
+  /* Large numeric readouts (portfolio value, price) */
+  --hud-font-value:    clamp(10px, 0.9vw, 20px);
+  /* Panel header titles */
+  --hud-font-header:   clamp(8px, 0.6vw, 12px);
+  /* Chart price display */
+  --hud-font-price:    clamp(14px, 1.1vw, 24px);
+  /* Readout / micro labels (LGF-85, DKO-22 style boxes) */
+  --hud-font-readout-label: clamp(5px, 0.4vw, 8px);
+  /* Readout values */
+  --hud-font-readout-value: clamp(9px, 0.7vw, 14px);
+
+  /* 2. Panel gap scaling */
+  --panel-gap:         clamp(1px, 0.15vw, 4px);
+}
+
+
+/* ── Apply Scaled Fonts to HUD Elements ────────────────────────── */
+
+/* Base HUD text — monospace elements inherit from this */
+.hud-panel,
+.hud-status-bar,
+.hud-filter-bar,
+.watchlist__name,
+.kill-switch-item,
+.macro-item__label,
+.hud-divider__label,
+.filter-pill,
+.ind-badge,
+.news-card__meta,
+.pos-mini-header,
+.interval-tab {
+  font-size: var(--hud-font-base);
+}
+
+/* HUD header titles */
+.hud-header__title,
+.panel__title {
+  font-size: var(--hud-font-header);
+}
+
+/* Large numeric values — portfolio totals, key metrics */
+.hud-value,
+.macro-item__value,
+.metric__value {
+  font-size: var(--hud-font-value);
+}
+
+/* Chart price display */
+.chart-header__price {
+  font-size: var(--hud-font-price);
+}
+
+/* Readout micro-labels */
+.hud-readout__label {
+  font-size: var(--hud-font-readout-label);
+}
+
+/* Readout values */
+.hud-readout__value {
+  font-size: var(--hud-font-readout-value);
+}
+
+/* Watchlist symbol & price — slightly above base */
+.watchlist__symbol,
+.watchlist__price {
+  font-size: clamp(8px, 0.65vw, 13px);
+}
+
+.watchlist__chg {
+  font-size: clamp(7px, 0.5vw, 10px);
+}
+
+/* Signal card type label */
+.signal-card__type {
+  font-size: var(--hud-font-base);
+  letter-spacing: clamp(1px, 0.12vw, 2px);
+}
+
+/* Position row text */
+.pos-row {
+  font-size: clamp(7px, 0.5vw, 10px);
+}
+
+/* AI panel body */
+.ai-panel-body {
+  font-size: clamp(8px, 0.6vw, 12px);
+}
+
+.ai-panel-body pre {
+  font-size: clamp(7px, 0.55vw, 11px);
+}
+
+/* News card headline */
+.news-card__headline {
+  font-size: clamp(8px, 0.6vw, 12px);
+}
+
+/* News card AI summary */
+.news-card__ai-summary {
+  font-size: clamp(7px, 0.55vw, 11px);
+}
+
+/* Trade buttons */
+.trade-btn {
+  font-size: clamp(8px, 0.65vw, 13px);
+  letter-spacing: clamp(1px, 0.12vw, 2px);
+}
+
+
+/* ── 6. Environment Tabs Responsive Scaling ────────────────────── */
+
+.env-tab {
+  font-size: clamp(9px, 0.6vw, 12px);
+  padding: clamp(3px, 0.3vw, 6px) clamp(8px, 0.6vw, 14px);
+}
+
+.env-tabs {
+  gap: clamp(1px, 0.1vw, 3px);
+}
+
+
+/* ── 7. Top Bar Scaling ────────────────────────────────────────── */
+
+.top-bar {
+  height: clamp(32px, 2.5vw, 48px);
+  padding: 0 clamp(8px, 0.6vw, 16px);
+}
+
+.top-bar__logo {
+  font-size: clamp(11px, 0.85vw, 16px);
+  gap: clamp(4px, 0.4vw, 10px);
+}
+
+.top-bar__logo svg {
+  width: clamp(14px, 1.1vw, 22px);
+  height: clamp(14px, 1.1vw, 22px);
+}
+
+.top-bar__search {
+  padding: clamp(3px, 0.2vw, 5px) clamp(6px, 0.5vw, 12px);
+  min-width: clamp(180px, 18vw, 380px);
+  gap: clamp(4px, 0.3vw, 8px);
+}
+
+.top-bar__search input {
+  font-size: clamp(10px, 0.7vw, 14px);
+}
+
+.top-bar__mode {
+  font-size: clamp(9px, 0.6vw, 12px);
+  padding: clamp(1px, 0.1vw, 3px) clamp(5px, 0.4vw, 10px);
+  letter-spacing: clamp(0.3px, 0.04vw, 0.7px);
+}
+
+.top-bar__actions {
+  gap: clamp(4px, 0.4vw, 10px);
+}
+
+
+/* ── 8. Watchlist Item Scaling ─────────────────────────────────── */
+
+.watchlist__item {
+  padding: clamp(3px, 0.25vw, 7px) clamp(6px, 0.5vw, 14px);
+  gap: clamp(1px, 0.1vw, 3px);
+}
+
+/* Also scale the index.css watchlist-item variant */
+.watchlist-item {
+  padding: clamp(5px, 0.4vw, 10px) clamp(6px, 0.5vw, 14px);
+}
+
+.watchlist-item__symbol {
+  font-size: clamp(10px, 0.75vw, 15px);
+}
+
+.watchlist-item__name {
+  font-size: clamp(9px, 0.6vw, 12px);
+}
+
+.watchlist-item__price {
+  font-size: clamp(10px, 0.75vw, 15px);
+}
+
+.watchlist-item__change {
+  font-size: clamp(9px, 0.6vw, 12px);
+}
+
+
+/* ── 9. News Card Scaling ──────────────────────────────────────── */
+
+.news-card {
+  padding: clamp(4px, 0.35vw, 9px) clamp(6px, 0.5vw, 14px);
+}
+
+.news-card__meta {
+  gap: clamp(3px, 0.25vw, 8px);
+}
+
+.news-card__sentiment {
+  width: clamp(3px, 0.25vw, 5px);
+  height: clamp(3px, 0.25vw, 5px);
+}
+
+/* index.css news-item variant */
+.news-item {
+  padding: clamp(6px, 0.5vw, 12px) 0;
+}
+
+.news-item__source {
+  font-size: clamp(7px, 0.5vw, 11px);
+  letter-spacing: clamp(0.3px, 0.04vw, 0.7px);
+}
+
+.news-item__title {
+  font-size: clamp(10px, 0.75vw, 15px);
+}
+
+.news-item__sentiment {
+  font-size: clamp(7px, 0.5vw, 11px);
+  padding: clamp(1px, 0.05vw, 2px) clamp(4px, 0.3vw, 8px);
+}
+
+
+/* ── 10. Signal Strip Scaling ──────────────────────────────────── */
+
+.signal-strip__signals {
+  padding: clamp(3px, 0.3vw, 8px) clamp(4px, 0.4vw, 10px);
+  gap: clamp(2px, 0.2vw, 6px);
+}
+
+.signal-strip__trade {
+  padding: clamp(3px, 0.3vw, 8px) clamp(4px, 0.4vw, 10px);
+  gap: clamp(2px, 0.2vw, 5px);
+}
+
+.signal-strip__trade-btns {
+  gap: clamp(2px, 0.2vw, 5px);
+}
+
+.signal-card {
+  gap: clamp(4px, 0.35vw, 10px);
+  padding: clamp(3px, 0.25vw, 7px) clamp(6px, 0.5vw, 12px);
+}
+
+.signal-card__type {
+  padding: clamp(1px, 0.1vw, 3px) clamp(4px, 0.35vw, 10px);
+}
+
+.signal-dot {
+  width: clamp(3px, 0.28vw, 6px);
+  height: clamp(3px, 0.28vw, 6px);
+}
+
+
+/* ── HUD Panel Padding & Gap Scaling ───────────────────────────── */
+
+.hud-header {
+  padding: clamp(3px, 0.25vw, 7px) clamp(6px, 0.5vw, 14px);
+  gap: clamp(4px, 0.35vw, 10px);
+  min-height: clamp(20px, 1.6vw, 32px);
+}
+
+.hud-filter-bar {
+  padding: clamp(2px, 0.2vw, 5px) clamp(4px, 0.4vw, 10px);
+  gap: clamp(1px, 0.1vw, 3px);
+}
+
+.chart-header {
+  padding: clamp(3px, 0.2vw, 5px) clamp(6px, 0.5vw, 12px);
+  gap: clamp(4px, 0.4vw, 10px);
+}
+
+.chart-header__indicators {
+  gap: clamp(2px, 0.15vw, 4px);
+}
+
+.panel__header {
+  padding: clamp(5px, 0.4vw, 10px) clamp(8px, 0.6vw, 16px);
+}
+
+.panel__body {
+  padding: clamp(8px, 0.6vw, 16px);
+}
+
+.hud-readout {
+  padding: clamp(3px, 0.2vw, 5px) clamp(5px, 0.4vw, 10px);
+  min-width: clamp(40px, 3.5vw, 72px);
+}
+
+/* Macro strip (bottom bar) */
+.macro-strip {
+  gap: clamp(5px, 0.5vw, 14px);
+  padding: clamp(3px, 0.3vw, 8px) clamp(6px, 0.5vw, 12px);
+}
+
+/* Status bar */
+.hud-status-bar {
+  gap: clamp(6px, 0.6vw, 18px);
+  padding: clamp(2px, 0.15vw, 4px) clamp(6px, 0.5vw, 12px);
+}
+
+/* HUD corner bracket sizing */
+.hud-panel::before,
+.hud-panel::after,
+.hud-panel-inner::before,
+.hud-panel-inner::after {
+  width: clamp(12px, 1.1vw, 22px);
+  height: clamp(12px, 1.1vw, 22px);
+}
+
+/* Tabs */
+.tab {
+  font-size: clamp(9px, 0.6vw, 12px);
+  padding: clamp(5px, 0.4vw, 10px) clamp(8px, 0.7vw, 16px);
+}
+
+/* Buttons */
+.btn {
+  font-size: clamp(10px, 0.65vw, 13px);
+  padding: clamp(4px, 0.3vw, 7px) clamp(8px, 0.65vw, 16px);
+  gap: clamp(3px, 0.25vw, 7px);
+}
+
+.btn--sm {
+  padding: clamp(2px, 0.15vw, 4px) clamp(5px, 0.4vw, 10px);
+  font-size: clamp(9px, 0.55vw, 12px);
+}
+
+/* HUD inputs */
+.hud-input {
+  font-size: clamp(8px, 0.6vw, 12px);
+  padding: clamp(3px, 0.2vw, 5px) clamp(5px, 0.4vw, 10px);
+}
+
+.hud-select {
+  font-size: clamp(7px, 0.5vw, 10px);
+  padding: clamp(2px, 0.15vw, 4px) clamp(4px, 0.3vw, 8px);
+}
+
+/* Scrollbar width scales on ultrawide */
+.hud-panel ::-webkit-scrollbar {
+  width: clamp(2px, 0.2vw, 5px);
+}
+
+
+/* ── 3. Ultrawide Breakpoint (>2560px) ─────────────────────────── */
+
+@media (min-width: 2561px) {
+  /* Scale the HUD panel padding for extra breathing room */
+  .hud-header {
+    padding: clamp(6px, 0.35vw, 10px) clamp(12px, 0.7vw, 20px);
+  }
+
+  .hud-readout {
+    padding: clamp(5px, 0.3vw, 8px) clamp(8px, 0.5vw, 14px);
+    min-width: clamp(60px, 4vw, 90px);
+  }
+
+  /* Wider watchlist columns */
+  .advanced-view {
+    grid-template-columns: clamp(180px, 12vw, 280px) 1fr clamp(300px, 20vw, 420px);
+  }
+
+  .watchlist__item {
+    padding: clamp(5px, 0.3vw, 9px) clamp(10px, 0.6vw, 18px);
+  }
+
+  .watchlist__symbol {
+    letter-spacing: clamp(1px, 0.1vw, 2px);
+  }
+
+  /* Larger chart area — widen center and give bottom bar more height */
+  .adv-center {
+    grid-template-rows: 1fr auto clamp(120px, 9vw, 200px);
+  }
+
+  .adv-bottom {
+    grid-template-columns: clamp(200px, 13vw, 300px) clamp(220px, 14vw, 340px) 1fr;
+  }
+
+  /* Main grid for non-HUD views */
+  .main-grid {
+    grid-template-columns: clamp(280px, 17vw, 380px) 1fr clamp(320px, 20vw, 440px);
+    grid-template-rows: 1fr clamp(260px, 16vw, 380px);
+  }
+
+  /* Larger corner brackets */
+  .hud-panel::before,
+  .hud-panel::after,
+  .hud-panel-inner::before,
+  .hud-panel-inner::after {
+    width: clamp(18px, 1.3vw, 28px);
+    height: clamp(18px, 1.3vw, 28px);
+  }
+
+  /* Scale geometric overlay rings */
+  .hud-reticle__ring--outer {
+    width: min(800px, 48vw);
+    height: min(800px, 48vw);
+  }
+
+  .hud-reticle__ring--mid {
+    width: min(560px, 34vw);
+    height: min(560px, 34vw);
+  }
+
+  .hud-reticle__ring--inner {
+    width: min(320px, 20vw);
+    height: min(320px, 20vw);
+  }
+
+  /* Wider kill-switch grid */
+  .kill-switch-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(4px, 0.3vw, 8px);
+  }
+
+  /* More spacious safety grid */
+  .safety-grid {
+    gap: clamp(6px, 0.4vw, 12px);
+  }
+
+  /* Wider settings layout */
+  .settings-layout {
+    grid-template-columns: clamp(200px, 13vw, 300px) 1fr;
+  }
+
+  /* Wider algo builder columns */
+  .algo-builder {
+    grid-template-columns: clamp(220px, 14vw, 320px) 1fr clamp(280px, 18vw, 400px);
+  }
+}
+
+
+/* ── Super Ultrawide (>3440px — 34" and beyond) ────────────────── */
+
+@media (min-width: 3441px) {
+  .advanced-view {
+    grid-template-columns: clamp(240px, 10vw, 340px) 1fr clamp(360px, 15vw, 480px);
+    gap: clamp(2px, 0.1vw, 5px);
+  }
+
+  .adv-right {
+    grid-template-rows: 1fr clamp(180px, 7vw, 280px);
+  }
+
+  /* Boost text shadow glow on ultrawide for visibility */
+  .hud-value {
+    text-shadow: 0 0 clamp(8px, 0.5vw, 14px) rgba(200, 205, 220, 0.18);
+  }
+
+  .chart-header__price {
+    text-shadow: 0 0 clamp(8px, 0.5vw, 14px) rgba(200, 205, 220, 0.18);
+  }
+}
+
+
+/* ── 4. Small Screen Breakpoint (<1400px) ──────────────────────── */
+
+@media (max-width: 1400px) {
+  /* Compact HUD panels */
+  .advanced-view {
+    grid-template-columns: 140px 1fr 240px;
+    grid-template-rows: 1fr 150px;
+    gap: 1px;
+    padding: 1px;
+  }
+
+  /* Tighter main grid */
+  .main-grid {
+    grid-template-columns: 220px 1fr 260px;
+    grid-template-rows: 1fr 220px;
+  }
+
+  /* Narrower bottom bar */
+  .adv-bottom {
+    grid-template-columns: 160px 180px 1fr;
+  }
+
+  /* Smaller indicator badges */
+  .ind-badge {
+    padding: 1px 4px;
+    font-size: 6px;
+    letter-spacing: 0.3px;
+  }
+
+  .interval-tab {
+    padding: 1px 4px;
+    font-size: 7px;
+  }
+
+  .filter-pill {
+    padding: 1px 5px;
+    font-size: 6px;
+  }
+
+  /* Compact header */
+  .hud-header {
+    padding: 3px 8px;
+    min-height: 22px;
+  }
+
+  .hud-header__title {
+    letter-spacing: 2px;
+  }
+
+  /* Compact chart header */
+  .chart-header {
+    padding: 3px 8px;
+    gap: 4px;
+  }
+
+  /* Reduce corner bracket size */
+  .hud-panel::before,
+  .hud-panel::after,
+  .hud-panel-inner::before,
+  .hud-panel-inner::after {
+    width: 12px;
+    height: 12px;
+  }
+
+  /* Compact news */
+  .news-card {
+    padding: 4px 8px;
+  }
+
+  /* Compact signals */
+  .signal-card {
+    gap: 4px;
+    padding: 3px 6px;
+  }
+
+  /* Narrower right panel */
+  .adv-right {
+    grid-template-rows: 1fr 140px;
+  }
+
+  /* Tighter macro strip */
+  .macro-strip {
+    gap: 6px;
+    padding: 3px 8px;
+  }
+
+  /* Settings sidebar shrinks */
+  .settings-layout {
+    grid-template-columns: 170px 1fr;
+  }
+
+  /* Algo builder sidebar shrinks */
+  .algo-builder {
+    grid-template-columns: 180px 1fr 240px;
+  }
+}
+
+
+/* ── Very Small / Narrow (<1100px) — Stack Panels ──────────────── */
+
+@media (max-width: 1100px) {
+  .advanced-view {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    gap: 1px;
+    overflow-y: auto;
+  }
+
+  /* Hide left watchlist column — show as overlay or collapsible */
+  .adv-watchlist {
+    display: none;
+  }
+
+  /* Stack bottom bar */
+  .adv-bottom {
+    grid-column: 1;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+  }
+
+  /* Stack algo builder */
+  .algo-builder {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+  }
+
+  .algo-sidebar {
+    max-height: 120px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Stack analysis layout */
+  .analysis-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+  }
+
+  .analysis-left {
+    max-height: 100px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Stack backtest layout */
+  .backtest-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .backtest-params {
+    max-height: 150px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Settings stacks */
+  .settings-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .settings-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .settings-nav-item {
+    border-left: none;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+  }
+
+  .settings-nav-item--active {
+    border-left-color: transparent;
+    border-bottom-color: var(--blue);
+  }
+}
+
+
+/* ── 5. Container Query Support for .hud-panel ─────────────────── */
+
+.hud-panel {
+  container-type: inline-size;
+  container-name: hud-panel;
+}
+
+/* When panel width < 200px: hide labels, show only values */
+@container hud-panel (max-width: 200px) {
+  .hud-readout__label,
+  .macro-item__label,
+  .kill-switch-item span:not(.kill-switch-dot),
+  .hud-header__ticks,
+  .hud-divider__label,
+  .news-card__meta,
+  .news-card__ai-summary {
+    display: none;
+  }
+
+  .hud-header__title {
+    letter-spacing: 1px;
+    font-size: clamp(6px, 0.5vw, 9px);
+  }
+
+  .hud-readout {
+    min-width: unset;
+    padding: 2px 4px;
+  }
+
+  .hud-readout__value {
+    font-size: clamp(8px, 0.6vw, 11px);
+  }
+
+  .watchlist__name {
+    display: none;
+  }
+
+  .signal-strength {
+    display: none;
+  }
+
+  .macro-item__value {
+    font-size: clamp(8px, 0.6vw, 12px);
+  }
+
+  .news-card__headline {
+    font-size: clamp(7px, 0.5vw, 10px);
+    -webkit-line-clamp: 1;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* When panel width < 150px: minimal mode */
+@container hud-panel (max-width: 150px) {
+  .hud-header {
+    padding: 2px 4px;
+    min-height: 18px;
+    gap: 3px;
+  }
+
+  .hud-header__dot {
+    width: 3px;
+    height: 3px;
+  }
+
+  .hud-readout__bars,
+  .hud-readout__label,
+  .chart-header__indicators,
+  .hud-corner-deco,
+  .hud-dot-array,
+  .filter-pill,
+  .ind-badge,
+  .news-card__sentiment,
+  .pos-mini-header {
+    display: none;
+  }
+
+  .hud-readout__value {
+    font-size: clamp(7px, 0.5vw, 10px);
+    letter-spacing: 0;
+  }
+
+  .watchlist__item {
+    padding: 2px 4px;
+  }
+
+  .watchlist__symbol {
+    font-size: clamp(7px, 0.5vw, 10px);
+    letter-spacing: 0;
+  }
+
+  .watchlist__price {
+    font-size: clamp(7px, 0.5vw, 10px);
+  }
+
+  .watchlist__chg {
+    display: none;
+  }
+
+  .pos-row {
+    grid-template-columns: 40px 1fr auto;
+    font-size: clamp(6px, 0.45vw, 9px);
+    padding: 2px 4px;
+  }
+
+  .news-card {
+    padding: 3px 4px;
+  }
+
+  .news-card__headline {
+    font-size: clamp(6px, 0.45vw, 9px);
+  }
+
+  .signal-card {
+    padding: 2px 4px;
+    gap: 3px;
+  }
+
+  .signal-card__type {
+    font-size: 6px;
+    padding: 1px 3px;
+    letter-spacing: 0.5px;
+  }
+
+  .macro-item__value {
+    font-size: clamp(7px, 0.5vw, 10px);
+  }
+
+  .hud-value {
+    font-size: clamp(8px, 0.6vw, 14px);
+  }
+}

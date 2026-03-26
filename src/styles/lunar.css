@@ -1,0 +1,242 @@
+/* ================================================================
+   Lunar Terminal — Atmospheric & Glow Layer
+   Drop this after index.css / phase2.css
+   ================================================================ */
+
+/* ── Star-field body background texture ─────────────────────────
+   Subtly radiates from a faint lunar core at the top.
+   Pure CSS — no image required.                                  */
+html, body, #root {
+  background:
+    radial-gradient(
+      ellipse 80% 40% at 50% -10%,
+      rgba(0, 212, 255, 0.04) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 60% 30% at 80% 110%,
+      rgba(157, 127, 240, 0.03) 0%,
+      transparent 60%
+    ),
+    #030712;
+}
+
+/* ── Panels — lunar glass effect ─────────────────────────────── */
+.panel {
+  background: linear-gradient(
+    145deg,
+    rgba(8, 15, 30, 0.95) 0%,
+    rgba(6, 13, 31, 0.98) 100%
+  );
+  border-color: #131f3a;
+  border-radius: 8px;
+}
+
+.panel:hover {
+  border-color: #1e3055;
+  box-shadow: 0 0 0 1px rgba(0, 212, 255, 0.04);
+}
+
+/* ── Top bar — deeper moonscape gradient ─────────────────────── */
+.top-bar {
+  background: linear-gradient(
+    90deg,
+    #040c1e 0%,
+    #060d1f 50%,
+    #040c1e 100%
+  );
+  border-bottom: 1px solid #131f3a;
+  box-shadow: 0 1px 0 0 rgba(0, 212, 255, 0.06);
+}
+
+/* ── Logo — lunar cyan glow ──────────────────────────────────── */
+.top-bar__logo {
+  color: #00d4ff;
+  text-shadow: 0 0 12px rgba(0, 212, 255, 0.5),
+               0 0 24px rgba(0, 212, 255, 0.2);
+  letter-spacing: 2px;
+}
+
+/* ── Tabs — lunar active state ───────────────────────────────── */
+.tab--active {
+  color: #00d4ff;
+  border-bottom-color: #00d4ff;
+  text-shadow: 0 0 8px rgba(0, 212, 255, 0.4);
+}
+
+.tab:hover {
+  color: #8ba4c8;
+  background: rgba(0, 212, 255, 0.04);
+}
+
+.env-tab--active {
+  color: #00d4ff;
+  background: rgba(0, 212, 255, 0.08);
+  border-color: rgba(0, 212, 255, 0.2);
+  box-shadow: 0 0 8px rgba(0, 212, 255, 0.1);
+}
+
+/* ── Buttons — lunar accent ───────────────────────────────────── */
+.btn--primary {
+  background:  rgba(0, 212, 255, 0.07);
+  color:       #00d4ff;
+  border-color: rgba(0, 212, 255, 0.25);
+}
+.btn--primary:hover:not(:disabled) {
+  background: rgba(0, 212, 255, 0.15);
+  box-shadow: 0 0 12px rgba(0, 212, 255, 0.2);
+  color: #00d4ff;
+}
+
+.btn--success {
+  background:  rgba(0, 229, 160, 0.07);
+  color:       #00e5a0;
+  border-color: rgba(0, 229, 160, 0.25);
+}
+.btn--success:hover:not(:disabled) {
+  background: rgba(0, 229, 160, 0.15);
+  box-shadow: 0 0 12px rgba(0, 229, 160, 0.2);
+}
+
+/* ── Scrollbars — lunar teal ─────────────────────────────────── */
+::-webkit-scrollbar-thumb {
+  background: #1e3055;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 212, 255, 0.3);
+}
+
+/* ── Watchlist active item highlight ─────────────────────────── */
+.watchlist-item--active {
+  background: rgba(0, 212, 255, 0.06);
+  border-left: 2px solid #00d4ff;
+}
+
+.watchlist-item:hover {
+  background: rgba(0, 212, 255, 0.03);
+}
+
+/* ── Panel headers ───────────────────────────────────────────── */
+.panel__header {
+  background: linear-gradient(135deg, rgba(0,212,255,0.02) 0%, transparent 100%);
+  border-bottom-color: #131f3a;
+}
+
+.panel__title {
+  color: #4e6a90;
+  letter-spacing: 1px;
+}
+
+/* ── Trading mode badges ─────────────────────────────────────── */
+.top-bar__mode--demo  { background: rgba(0,212,255,0.08);  color: #00d4ff;  border: 1px solid rgba(0,212,255,0.2); }
+.top-bar__mode--paper { background: rgba(255,179,71,0.08); color: #ffb347;  border: 1px solid rgba(255,179,71,0.2); }
+.top-bar__mode--live  { background: rgba(255,77,106,0.08); color: #ff4d6a;  border: 1px solid rgba(255,77,106,0.2); }
+
+/* ── Input fields — lunar ─────────────────────────────────────── */
+input, select, textarea {
+  background: rgba(6, 13, 31, 0.9);
+  border: 1px solid #1e3055;
+  color: var(--text-primary);
+  border-radius: 4px;
+  transition: border-color 150ms, box-shadow 150ms;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #00d4ff;
+  box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.12);
+}
+
+/* ── Positive / negative values ─────────────────────────────── */
+.positive { color: #00e5a0; }
+.negative { color: #ff4d6a; }
+
+/* ── Safety dots ─────────────────────────────────────────────── */
+.safety-dot--green { background: #00e5a0; box-shadow: 0 0 6px #00e5a0; }
+.safety-dot--red   { background: #ff4d6a; box-shadow: 0 0 6px #ff4d6a; }
+.safety-dot--amber { background: #ffb347; box-shadow: 0 0 6px #ffb347; }
+
+/* ── Log panel — lunar dark ──────────────────────────────────── */
+.error-panel { background: #020811; border-top-color: #131f3a; }
+.error-panel__header { background: #030a18; border-bottom-color: #131f3a; }
+.error-panel__resize-handle:hover { background: rgba(0, 212, 255, 0.15); }
+
+/* ── Glow keyframe for status dots ─────────────────────────── */
+@keyframes lunar-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 4px currentColor; }
+  50%       { opacity: 0.7; box-shadow: 0 0 10px currentColor; }
+}
+
+/* ── Settings nav active item ─────────────────────────────────── */
+.settings-nav-item--active {
+  color: #00d4ff;
+  background: rgba(0, 212, 255, 0.07);
+  border-left-color: #00d4ff;
+}
+
+/* ── Algo file active ─────────────────────────────────────────── */
+.algo-file-item--active {
+  background: rgba(0, 212, 255, 0.06);
+  color: #00d4ff;
+  border-left: 2px solid #00d4ff;
+}
+
+/* ── Browser panel (AI Chat) tab active ─────────────────────── */
+.browser-tab--active {
+  background: rgba(0, 212, 255, 0.08);
+  color: #00d4ff;
+  border-color: rgba(0, 212, 255, 0.2);
+}
+
+/* ── Metric values — lunar glow on hover ─────────────────────── */
+.metric__value {
+  font-size: 16px;
+  transition: text-shadow 200ms;
+}
+.metric:hover .metric__value {
+  text-shadow: 0 0 8px currentColor;
+}
+
+/* ── Simple view hero — deep space card ───────────────────────── */
+.simple-hero {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 212, 255, 0.04) 0%,
+    rgba(8, 15, 30, 0.98) 60%,
+    rgba(157, 127, 240, 0.03) 100%
+  );
+  border-color: #1e3055;
+  position: relative;
+  overflow: hidden;
+}
+.simple-hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -20%;
+  width: 60%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(0,212,255,0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* ── Simple cards ─────────────────────────────────────────────── */
+.simple-card {
+  background: linear-gradient(145deg, rgba(8,15,30,0.96) 0%, rgba(6,13,31,0.98) 100%);
+  border-color: #131f3a;
+  transition: border-color 200ms, box-shadow 200ms;
+}
+.simple-card:hover {
+  border-color: rgba(0, 212, 255, 0.2);
+  box-shadow: 0 0 16px rgba(0, 212, 255, 0.05);
+}
+
+/* ── Algo builder editor area ─────────────────────────────────── */
+.algo-editor {
+  background: #020810;  /* near-void for Monaco */
+}
+
+/* ── Pulse animation override ─────────────────────────────────── */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}

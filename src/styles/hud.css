@@ -1,0 +1,1120 @@
+/* ================================================================
+   Lunar Terminal — Tactical HUD Interface
+   Monochrome targeting system aesthetic.
+   Thin geometric hairlines, angular brackets, arc segments,
+   circular reticles, dot arrays on near-black.
+   ================================================================ */
+
+:root {
+  --hud-bg: #050510;
+  --hud-bg-panel: rgba(8, 8, 20, 0.45);
+  --hud-bg-panel-hover: rgba(12, 12, 28, 0.55);
+  --hud-bg-hover: rgba(180, 185, 200, 0.03);
+  --hud-glass-blur: 12px;
+  --hud-holo-shimmer: rgba(180, 185, 200, 0.03);
+  --hud-line: rgba(180, 185, 200, 0.10);
+  --hud-line-hover: rgba(180, 185, 200, 0.18);
+  --hud-line-active: rgba(200, 205, 220, 0.35);
+  --hud-bracket: rgba(200, 205, 220, 0.50);
+  --hud-text: #c8c8d4;
+  --hud-text-bright: #e8e8f0;
+  --hud-text-mid: #707080;
+  --hud-text-dim: #383848;
+  --hud-accent: rgba(200, 205, 220, 0.60);
+  --hud-green: #00cc88;
+  --hud-red: #cc3355;
+  --hud-amber: #bb8833;
+  --hud-font: var(--font-mono, 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace);
+  --hud-text-scale: 1;
+}
+
+/* Global text scale — all HUD text respects this multiplier */
+.app {
+  font-size: calc(10px * var(--hud-text-scale));
+}
+
+/* ── HUD Panel (angular bracket corners + glass transparency) ── */
+.hud-panel {
+  position: relative;
+  background: var(--hud-bg-panel);
+  border: 1px solid var(--hud-line);
+  border-image: linear-gradient(90deg, transparent, rgba(180,185,200,0.15), transparent) 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(var(--hud-glass-blur));
+  -webkit-backdrop-filter: blur(var(--hud-glass-blur));
+  box-shadow: inset 0 0 30px rgba(180,185,200,0.02);
+  transition: background 0.3s ease;
+}
+
+/* Corner brackets — top-left + bottom-right (with glow) */
+.hud-panel::before {
+  content: '';
+  position: absolute;
+  top: -1px; left: -1px;
+  width: 18px; height: 18px;
+  border-top: 1px solid var(--hud-bracket);
+  border-left: 1px solid var(--hud-bracket);
+  pointer-events: none;
+  z-index: 10;
+  filter: drop-shadow(0 0 3px rgba(200,205,220,0.08));
+}
+
+.hud-panel::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; right: -1px;
+  width: 18px; height: 18px;
+  border-bottom: 1px solid var(--hud-bracket);
+  border-right: 1px solid var(--hud-bracket);
+  pointer-events: none;
+  z-index: 10;
+  filter: drop-shadow(0 0 3px rgba(200,205,220,0.08));
+}
+
+/* Additional corners via inner wrapper (with glow) */
+.hud-panel-inner::before {
+  content: '';
+  position: absolute;
+  top: -1px; right: -1px;
+  width: 18px; height: 18px;
+  border-top: 1px solid var(--hud-bracket);
+  border-right: 1px solid var(--hud-bracket);
+  pointer-events: none;
+  z-index: 10;
+  filter: drop-shadow(0 0 3px rgba(200,205,220,0.08));
+}
+
+.hud-panel-inner::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: -1px;
+  width: 18px; height: 18px;
+  border-bottom: 1px solid var(--hud-bracket);
+  border-left: 1px solid var(--hud-bracket);
+  pointer-events: none;
+  z-index: 10;
+  filter: drop-shadow(0 0 3px rgba(200,205,220,0.08));
+}
+
+/* Variant: no visual difference in monochrome — keep for compatibility */
+.hud-panel--amber::before,
+.hud-panel--amber::after  { border-color: var(--hud-amber); }
+.hud-panel--green::before,
+.hud-panel--green::after  { border-color: var(--hud-green); }
+.hud-panel--red::before,
+.hud-panel--red::after    { border-color: var(--hud-red); }
+
+/* Hover: glass intensifies */
+.hud-panel:hover {
+  background: var(--hud-bg-panel-hover);
+  border-color: var(--hud-line-hover);
+}
+
+/* ── HUD Header ───────────────────────────────────────────────── */
+.hud-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border-bottom: 1px solid var(--hud-line);
+  background: linear-gradient(90deg, rgba(180,185,200,0.02) 0%, transparent 60%);
+  flex-shrink: 0;
+  min-height: 26px;
+}
+
+.hud-header__title {
+  font-family: var(--hud-font);
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--hud-text);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-shadow: 0 0 6px rgba(200, 205, 220, 0.10);
+}
+
+/* Pulsing status dot with holographic flicker */
+.hud-header__dot {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--hud-text-mid);
+  animation: hud-pulse 3s ease-in-out infinite, holo-flicker 4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.hud-header__dot--active { background: var(--hud-text); }
+.hud-header__dot--green  { background: var(--hud-green); }
+.hud-header__dot--red    { background: var(--hud-red); }
+.hud-header__dot--amber  { background: var(--hud-amber); }
+.hud-header__dot--dim    { background: var(--hud-text-dim); animation: none; }
+
+/* Decorative tick marks in header */
+.hud-header__ticks {
+  display: flex;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.hud-header__tick {
+  width: 1px;
+  height: 6px;
+  background: var(--hud-text-dim);
+}
+
+.hud-header__tick:nth-child(5n) {
+  height: 10px;
+  background: var(--hud-text-mid);
+}
+
+@keyframes hud-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.3; }
+}
+
+/* ── Scan line animation ──────────────────────────────────────── */
+.hud-scan {
+  position: relative;
+  overflow: hidden;
+}
+
+.hud-scan::after {
+  content: '';
+  display: none;
+  position: absolute;
+  top: -1px; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hud-text-mid), transparent);
+  animation: scan-line 4s linear infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.hud-scan--active::after { display: block; }
+
+@keyframes scan-line {
+  0%   { top: -1px; opacity: 0.8; }
+  95%  { top: 100%; opacity: 0.2; }
+  100% { top: -1px; opacity: 0; }
+}
+
+/* ── Advanced View Layout ─────────────────────────────────────── */
+.advanced-view {
+  display: grid;
+  grid-template-columns: 165px 1fr 295px;
+  grid-template-rows: 1fr 175px;
+  gap: 2px;
+  padding: 2px;
+  height: 100%;
+  min-height: 0;
+  background: radial-gradient(ellipse at 50% 45%, rgba(15,15,30,0.3) 0%, transparent 70%), var(--hud-bg);
+  position: relative;
+}
+
+/* Geometric overlay lines (decorative) */
+.advanced-view::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: min(500px, 40vw);
+  height: min(500px, 40vw);
+  transform: translate(-50%, -55%);
+  border: 1px solid rgba(180, 185, 200, 0.04);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.advanced-view::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: min(350px, 28vw);
+  height: min(350px, 28vw);
+  transform: translate(-50%, -55%);
+  border: 1px solid rgba(180, 185, 200, 0.03);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.advanced-view > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Stack chart + tech readout + signals in center */
+.adv-center {
+  display: grid;
+  grid-template-rows: 1fr auto 120px;
+  gap: 2px;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Stack news + AI panel in right column */
+.adv-right {
+  display: grid;
+  grid-template-rows: 1fr 180px;
+  gap: 2px;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ── Resize handles ───────────────────────────────────────────── */
+.resize-handle {
+  position: absolute;
+  z-index: 10;
+  transition: background 0.15s;
+}
+
+.resize-handle--col {
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  cursor: col-resize;
+}
+
+.resize-handle--row {
+  left: 0;
+  right: 0;
+  height: 5px;
+  cursor: row-resize;
+}
+
+.resize-handle:hover,
+.resize-handle:active {
+  background: rgba(180, 185, 200, 0.15);
+}
+
+/* Bottom bar spans all 3 columns */
+.adv-bottom {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 200px 220px 1fr;
+  gap: 2px;
+  min-height: 0;
+}
+
+/* ── Watchlist ────────────────────────────────────────────────── */
+.adv-watchlist { grid-row: 1 / -1; }
+
+.watchlist {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.watchlist__items {
+  flex: 1;
+  overflow-y: auto;
+  padding: 2px 0;
+}
+
+.watchlist__item {
+  padding: 5px 10px;
+  border-left: 1px solid transparent;
+  cursor: pointer;
+  transition: all 80ms;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px;
+  align-items: center;
+}
+
+.watchlist__item:hover       { background: var(--hud-bg-hover); border-left-color: var(--hud-line-active); }
+.watchlist__item--active     { background: rgba(180,185,200,0.05); border-left-color: var(--hud-text-mid); }
+
+.watchlist__symbol { font-family: var(--hud-font); font-size: 11px; font-weight: 700; color: var(--hud-text-bright); letter-spacing: 1px; }
+.watchlist__name   { font-size: 7px; color: var(--hud-text-dim); font-family: var(--hud-font); text-transform: uppercase; letter-spacing: 0.5px; }
+.watchlist__price  { font-family: var(--hud-font); font-size: 11px; font-weight: 600; text-align: right; color: var(--hud-text); }
+.watchlist__chg    { font-family: var(--hud-font); font-size: 9px; text-align: right; }
+
+/* ── Signal dots (strength ●●●●○) ──────────────────────────── */
+.signal-strength {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+
+.signal-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--hud-text-dim);
+  transition: background 200ms;
+}
+.signal-dot--fill   { background: var(--hud-text-mid); }
+.signal-dot--buy    { background: var(--hud-green); }
+.signal-dot--sell   { background: var(--hud-red); }
+
+/* ── Chart interval tabs ─────────────────────────────────────── */
+.interval-tab {
+  padding: 2px 6px;
+  font-family: var(--hud-font);
+  font-size: 8px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  color: var(--hud-text-dim);
+  background: none;
+  transition: all 80ms;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.interval-tab:hover           { color: var(--hud-text-mid); border-color: var(--hud-line); }
+.interval-tab--active         { color: var(--hud-text); border-color: var(--hud-line-active); background: rgba(180,185,200,0.04); }
+
+/* ── Indicator badges ────────────────────────────────────────── */
+.ind-badge {
+  padding: 1px 5px;
+  font-family: var(--hud-font);
+  font-size: 7px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 80ms;
+  letter-spacing: 0.5px;
+  color: var(--hud-text-dim);
+}
+.ind-badge:hover    { color: var(--hud-text-mid); border-color: var(--hud-line); }
+.ind-badge--active  { color: var(--hud-text); border-color: var(--hud-line-active); background: rgba(180,185,200,0.04); }
+
+/* ── News card ───────────────────────────────────────────────── */
+.news-card {
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--hud-line);
+  cursor: pointer;
+  transition: background 80ms;
+}
+.news-card:hover { background: var(--hud-bg-hover); }
+
+.news-card__headline {
+  font-size: 10px;
+  color: var(--hud-text);
+  line-height: 1.4;
+  margin-bottom: 3px;
+  font-family: var(--hud-font);
+}
+.news-card__headline:hover { color: var(--hud-text-bright); }
+
+.news-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--hud-font);
+  font-size: 7px;
+  color: var(--hud-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.news-card__sentiment {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.news-card__ai-summary {
+  margin-top: 5px;
+  padding: 6px 8px;
+  background: rgba(180,185,200,0.02);
+  border-left: 1px solid var(--hud-text-dim);
+  font-size: 9px;
+  color: var(--hud-text-mid);
+  line-height: 1.5;
+  font-family: var(--hud-font);
+}
+
+/* ── Signal card ─────────────────────────────────────────────── */
+.signal-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  border-right: 1px solid var(--hud-line);
+  flex: 1;
+}
+
+.signal-card__type {
+  font-family: var(--hud-font);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  padding: 2px 8px;
+  flex-shrink: 0;
+  border: 1px solid;
+}
+
+.signal-card__type--buy  { color: var(--hud-green); border-color: var(--hud-green); background: rgba(0,204,136,0.06); }
+.signal-card__type--sell { color: var(--hud-red); border-color: var(--hud-red); background: rgba(204,51,85,0.06); }
+.signal-card__type--hold { color: var(--hud-amber); border-color: var(--hud-amber); background: rgba(187,136,51,0.06); }
+
+/* ── Trade button ────────────────────────────────────────────── */
+.trade-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  font-family: var(--hud-font);
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  letter-spacing: 2px;
+  transition: all 120ms;
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+}
+
+.trade-btn--buy {
+  background: rgba(0,204,136,0.06);
+  color: var(--hud-green);
+  border: 1px solid rgba(0,204,136,0.25);
+}
+.trade-btn--buy:hover {
+  background: rgba(0,204,136,0.12);
+  border-color: rgba(0,204,136,0.5);
+}
+
+.trade-btn--sell {
+  background: rgba(204,51,85,0.06);
+  color: var(--hud-red);
+  border: 1px solid rgba(204,51,85,0.25);
+}
+.trade-btn--sell:hover {
+  background: rgba(204,51,85,0.12);
+  border-color: rgba(204,51,85,0.5);
+}
+
+/* ── Risk slider ─────────────────────────────────────────────── */
+.risk-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 2px;
+  background: var(--hud-text-dim);
+  outline: none;
+}
+.risk-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--hud-text);
+  cursor: pointer;
+  border: 1px solid var(--hud-text-mid);
+}
+
+/* ── AI analysis panel ───────────────────────────────────────── */
+.ai-panel-body {
+  padding: 8px 10px;
+  font-size: 10px;
+  color: var(--hud-text-mid);
+  line-height: 1.6;
+  overflow-y: auto;
+  flex: 1;
+  font-family: var(--hud-font);
+}
+
+.ai-panel-body pre {
+  font-family: var(--hud-font);
+  font-size: 9px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--hud-text);
+}
+
+/* ── Positions table ─────────────────────────────────────────── */
+.pos-row {
+  display: grid;
+  grid-template-columns: 50px 1fr auto auto;
+  gap: 6px;
+  padding: 4px 10px;
+  border-bottom: 1px solid var(--hud-line);
+  align-items: center;
+  font-family: var(--hud-font);
+  font-size: 9px;
+  color: var(--hud-text-mid);
+}
+
+.pos-row:hover { background: var(--hud-bg-hover); }
+
+/* ── Category filter pills ───────────────────────────────────── */
+.filter-pill {
+  padding: 2px 8px;
+  font-family: var(--hud-font);
+  font-size: 7px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: none;
+  color: var(--hud-text-dim);
+  transition: all 80ms;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.filter-pill:hover          { color: var(--hud-text-mid); border-color: var(--hud-line); }
+.filter-pill--active        { color: var(--hud-text); border-color: var(--hud-line-active); background: rgba(180,185,200,0.04); }
+
+/* ── Status bar ──────────────────────────────────────────────── */
+.hud-status-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 3px 10px;
+  border-top: 1px solid var(--hud-line);
+  background: rgba(5,5,16,0.9);
+  font-family: var(--hud-font);
+  font-size: 7px;
+  color: var(--hud-text-dim);
+  flex-shrink: 0;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* ── Number inputs ───────────────────────────────────────────── */
+.hud-input {
+  background: rgba(8,8,20,0.95);
+  border: 1px solid var(--hud-line-hover);
+  color: var(--hud-text);
+  font-family: var(--hud-font);
+  font-size: 10px;
+  padding: 4px 8px;
+  width: 100%;
+  outline: none;
+  transition: border-color 120ms;
+  letter-spacing: 0.5px;
+}
+.hud-input:focus { border-color: var(--hud-text-mid); }
+
+.hud-select {
+  background: rgba(8,8,20,0.95);
+  border: 1px solid var(--hud-line-hover);
+  color: var(--hud-text-mid);
+  font-family: var(--hud-font);
+  font-size: 8px;
+  padding: 3px 6px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+}
+
+/* ── Glowing value display (holographic projection glow) ──────── */
+.hud-value {
+  font-family: var(--hud-font);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--hud-text-bright);
+  text-shadow: 0 0 8px rgba(200, 205, 220, 0.15);
+  animation: holo-flicker 4s ease-in-out infinite;
+}
+.hud-value--cyan   { color: var(--hud-text-bright); text-shadow: 0 0 8px rgba(200, 205, 220, 0.15); }
+.hud-value--green  { color: var(--hud-green); text-shadow: 0 0 10px rgba(0, 204, 136, 0.20); }
+.hud-value--red    { color: var(--hud-red); text-shadow: 0 0 10px rgba(204, 51, 85, 0.20); }
+.hud-value--amber  { color: var(--hud-amber); text-shadow: 0 0 10px rgba(187, 136, 51, 0.20); }
+
+/* ── Scrollable panel body ──────────────────────────────────── */
+.hud-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+.hud-panel-body::-webkit-scrollbar { width: 3px; }
+.hud-panel-body::-webkit-scrollbar-track { background: transparent; }
+.hud-panel-body::-webkit-scrollbar-thumb { background: rgba(180,185,200,0.15); border-radius: 2px; }
+.hud-panel-body::-webkit-scrollbar-thumb:hover { background: rgba(180,185,200,0.3); }
+
+/* ── Market filter bar ──────────────────────────────────────── */
+.hud-filter-bar {
+  display: flex;
+  gap: 2px;
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--hud-line);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+/* ── Chart header row ───────────────────────────────────────── */
+.chart-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  border-bottom: 1px solid var(--hud-line);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.chart-header__price {
+  font-family: var(--hud-font);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--hud-text-bright);
+}
+
+.chart-header__indicators {
+  display: flex;
+  gap: 3px;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+/* ── Signal strip layout ────────────────────────────────────── */
+.signal-strip {
+  display: flex;
+  gap: 2px;
+  height: 100%;
+  min-height: 0;
+}
+
+.signal-strip__signals {
+  flex: 2;
+  display: flex;
+  gap: 4px;
+  padding: 6px 8px;
+  overflow-x: auto;
+  align-items: center;
+}
+
+.signal-strip__trade {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px 8px;
+  border-left: 1px solid var(--hud-line);
+  justify-content: center;
+}
+
+.signal-strip__trade-btns {
+  display: flex;
+  gap: 4px;
+}
+
+/* ── Risk meter bar ─────────────────────────────────────────── */
+.risk-meter {
+  height: 2px;
+  background: var(--hud-text-dim);
+  overflow: hidden;
+}
+
+.risk-meter__fill {
+  height: 100%;
+  transition: width 300ms, background 300ms;
+}
+
+/* ── Kill switch grid ───────────────────────────────────────── */
+.kill-switch-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+
+.kill-switch-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--hud-font);
+  font-size: 7px;
+  color: var(--hud-text-dim);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.kill-switch-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.kill-switch-dot--ok    { background: var(--hud-green); }
+.kill-switch-dot--warn  { background: var(--hud-amber); }
+.kill-switch-dot--fail  { background: var(--hud-red); }
+.kill-switch-dot--dim   { background: var(--hud-text-dim); }
+
+/* ── Bottom bar: macro strip ────────────────────────────────── */
+.macro-strip {
+  display: flex;
+  gap: 10px;
+  padding: 6px 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.macro-item {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.macro-item__label {
+  font-family: var(--hud-font);
+  font-size: 6px;
+  color: var(--hud-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.macro-item__value {
+  font-family: var(--hud-font);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--hud-text);
+}
+
+/* ── AI tab switcher ────────────────────────────────────────── */
+.ai-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--hud-line);
+  flex-shrink: 0;
+}
+
+/* ── Positions mini table ───────────────────────────────────── */
+.pos-mini-table {
+  font-family: var(--hud-font);
+  font-size: 9px;
+  width: 100%;
+}
+
+.pos-mini-header {
+  display: grid;
+  grid-template-columns: 48px 1fr 1fr 1fr;
+  gap: 4px;
+  padding: 3px 8px;
+  color: var(--hud-text-dim);
+  font-size: 6px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  border-bottom: 1px solid var(--hud-line);
+}
+
+/* ── News search input ──────────────────────────────────────── */
+.news-search {
+  padding: 3px 8px;
+  border-bottom: 1px solid var(--hud-line);
+  flex-shrink: 0;
+}
+
+.news-search input {
+  width: 100%;
+  padding: 3px 6px;
+  font-size: 9px;
+  box-sizing: border-box;
+}
+
+/* ── Positive / Negative color classes ───────────────────────── */
+.positive { color: var(--hud-green); }
+.negative { color: var(--hud-red); }
+
+/* ── HUD Geometric Decorations ───────────────────────────────── */
+
+/* Rotating arc ring (placed behind center chart) */
+.hud-reticle {
+  position: absolute;
+  top: 50%; left: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hud-reticle__ring {
+  position: absolute;
+  border: 1px solid rgba(180, 185, 200, 0.09);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.hud-reticle__ring--outer {
+  width: min(600px, 48vw);
+  height: min(600px, 48vw);
+}
+
+.hud-reticle__ring--mid {
+  width: min(420px, 34vw);
+  height: min(420px, 34vw);
+}
+
+.hud-reticle__ring--inner {
+  width: min(240px, 20vw);
+  height: min(240px, 20vw);
+}
+
+/* Rotating arc segment */
+.hud-reticle__arc {
+  position: absolute;
+  width: min(500px, 40vw);
+  height: min(500px, 40vw);
+  transform: translate(-50%, -50%);
+  border: 1px solid transparent;
+  border-top-color: rgba(180, 185, 200, 0.08);
+  border-right-color: rgba(180, 185, 200, 0.05);
+  border-radius: 50%;
+  animation: reticle-rotate 30s linear infinite;
+}
+
+.hud-reticle__arc--reverse {
+  width: min(380px, 30vw);
+  height: min(380px, 30vw);
+  border-top-color: rgba(180, 185, 200, 0.06);
+  border-right-color: transparent;
+  border-left-color: rgba(180, 185, 200, 0.04);
+  animation-direction: reverse;
+  animation-duration: 45s;
+}
+
+@keyframes reticle-rotate {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Dot array (semicircular) */
+.hud-dot-array {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+}
+
+.hud-dot-array__dot {
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: var(--hud-text-dim);
+}
+
+.hud-dot-array__dot--active {
+  background: var(--hud-text-mid);
+}
+
+/* Horizontal hairline separator with label */
+.hud-divider {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  flex-shrink: 0;
+}
+
+.hud-divider__line {
+  flex: 1;
+  height: 1px;
+  background: var(--hud-line);
+}
+
+.hud-divider__label {
+  font-family: var(--hud-font);
+  font-size: 6px;
+  color: var(--hud-text-dim);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+/* Corner decoration — angular bracket with tick marks */
+.hud-corner-deco {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.hud-corner-deco--tl { top: 6px; left: 6px; }
+.hud-corner-deco--tr { top: 6px; right: 6px; transform: scaleX(-1); }
+.hud-corner-deco--bl { bottom: 6px; left: 6px; transform: scaleY(-1); }
+.hud-corner-deco--br { bottom: 6px; right: 6px; transform: scale(-1, -1); }
+
+.hud-corner-deco__bracket {
+  position: absolute;
+  top: 0; left: 0;
+  width: 20px; height: 20px;
+  border-top: 1px solid var(--hud-accent);
+  border-left: 1px solid var(--hud-accent);
+}
+
+.hud-corner-deco__ticks {
+  position: absolute;
+  top: 0; left: 22px;
+  display: flex;
+  gap: 2px;
+}
+
+.hud-corner-deco__ticks span {
+  width: 1px;
+  height: 4px;
+  background: var(--hud-text-dim);
+}
+
+/* ── Targeting crosshair (center decoration) ─────────────────── */
+.hud-crosshair {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -55%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hud-crosshair__h,
+.hud-crosshair__v {
+  position: absolute;
+  background: rgba(180, 185, 200, 0.04);
+}
+
+.hud-crosshair__h {
+  width: 120px;
+  height: 1px;
+  top: 0; left: -60px;
+}
+
+.hud-crosshair__v {
+  width: 1px;
+  height: 120px;
+  top: -60px; left: 0;
+}
+
+/* ── Data readout boxes (like LGF-85 / DKO-22 in the image) ── */
+.hud-readout {
+  font-family: var(--hud-font);
+  padding: 4px 8px;
+  border: 1px solid var(--hud-line);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 56px;
+}
+
+.hud-readout__label {
+  font-size: 6px;
+  font-weight: 700;
+  color: var(--hud-text-dim);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.hud-readout__value {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--hud-text);
+  letter-spacing: 1px;
+  font-family: var(--hud-font);
+  text-shadow: 0 0 6px rgba(200, 205, 220, 0.12);
+}
+
+.hud-readout__bars {
+  display: flex;
+  gap: 2px;
+}
+
+.hud-readout__bar {
+  height: 3px;
+  flex: 1;
+  background: var(--hud-text-dim);
+}
+
+.hud-readout__bar--fill {
+  background: var(--hud-text-mid);
+}
+
+.hud-readout__bar--bright {
+  background: var(--hud-text);
+}
+
+/* ── Scrollbar styling (thin, monochrome) ─────────────────────── */
+.hud-panel ::-webkit-scrollbar {
+  width: 3px;
+}
+
+.hud-panel ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.hud-panel ::-webkit-scrollbar-thumb {
+  background: var(--hud-text-dim);
+  border-radius: 1px;
+}
+
+.hud-panel ::-webkit-scrollbar-thumb:hover {
+  background: var(--hud-text-mid);
+}
+
+/* ── Ticker strip animation ──────────────────────────────────── */
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ── Holographic Effects ─────────────────────────────────────── */
+
+/* Holographic overlay: scan-lines + shimmer (added via HudPanel.jsx) */
+.hud-holo-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 1px,
+      rgba(180, 185, 200, 0.015) 1px,
+      rgba(180, 185, 200, 0.015) 2px
+    ),
+    linear-gradient(
+      135deg,
+      transparent 40%,
+      rgba(180, 185, 200, 0.04) 50%,
+      transparent 60%
+    );
+  background-size: 100% 100%, 200% 200%;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+/* Scan-lines always visible (subtle CRT texture) */
+.hud-holo-overlay--scanlines {
+  opacity: 1;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 1px,
+      rgba(180, 185, 200, 0.015) 1px,
+      rgba(180, 185, 200, 0.015) 2px
+    );
+  background-size: 100% 100%;
+}
+
+/* Shimmer activates on hover or when loading */
+.hud-panel:hover .hud-holo-overlay,
+.hud-scan--active .hud-holo-overlay {
+  opacity: 1;
+  animation: holo-shimmer 8s ease-in-out infinite;
+}
+
+/* Shimmer animation — diagonal light band sweeps across */
+@keyframes holo-shimmer {
+  0%   { background-position: 100% 100%, 200% 200%; }
+  50%  { background-position: 100% 100%, -50% -50%; }
+  100% { background-position: 100% 100%, 200% 200%; }
+}
+
+/* Holographic flicker — subtle opacity jitter like a projection */
+@keyframes holo-flicker {
+  0%   { opacity: 1; }
+  25%  { opacity: 0.97; }
+  50%  { opacity: 1; }
+  75%  { opacity: 0.98; }
+  100% { opacity: 1; }
+}
+
+/* Chart price header gets projection glow too */
+.chart-header__price {
+  text-shadow: 0 0 8px rgba(200, 205, 220, 0.15);
+}
+
+/* Green/red value text glow */
+.positive { text-shadow: 0 0 8px rgba(0, 204, 136, 0.15); }
+.negative { text-shadow: 0 0 8px rgba(204, 51, 85, 0.15); }

@@ -1,0 +1,246 @@
+/* ================================================================
+   Phase 2 — Additional CSS for all new environments
+   Append this to index.css
+   ================================================================ */
+
+/* Missing variables */
+:root {
+  --amber-bg:    rgba(245, 158, 11, 0.1);
+  --red-bg:      rgba(239,  68,  68, 0.1);
+  --green-bg:    rgba( 34, 197,  94, 0.1);
+  --purple-bg:   rgba(168,  85, 247, 0.1);
+  --blue-bg:     rgba( 59, 130, 246, 0.1);
+  --purple:      #a855f7;
+}
+
+/* ── Environment Tabs (top bar) ── */
+.env-tabs {
+  display: flex;
+  gap: 2px;
+  -webkit-app-region: no-drag;
+}
+
+.env-tab {
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: all 150ms ease;
+}
+
+.env-tab:hover { color: var(--text-secondary); background: var(--bg-tertiary); }
+.env-tab--active {
+  color: var(--blue);
+  background: var(--blue-bg);
+  border-color: var(--blue)33;
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 5px 12px; border-radius: 4px; border: 1px solid var(--border);
+  background: var(--bg-tertiary); color: var(--text-secondary);
+  font-size: 11px; font-family: var(--font-sans); cursor: pointer;
+  transition: all 150ms ease; white-space: nowrap;
+}
+.btn:hover:not(:disabled) { background: var(--bg-hover); color: var(--text-primary); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn--sm { padding: 3px 8px; font-size: 10px; }
+.btn--icon { padding: 4px 6px; border: none; background: none; }
+.btn--primary { background: var(--blue-bg); color: var(--blue); border-color: var(--blue)44; }
+.btn--primary:hover:not(:disabled) { background: var(--blue); color: white; }
+.btn--success { background: var(--green-bg); color: var(--green); border-color: var(--green)44; }
+
+/* ── Metric ── */
+.metric { display: flex; flex-direction: column; }
+.metric__label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+.metric__value { font-family: var(--font-mono); font-size: 14px; font-weight: 600; }
+.positive { color: var(--green); }
+.negative { color: var(--red); }
+
+/* ── Safety Grid ── */
+.safety-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.safety-item { display: flex; align-items: center; gap: 6px; font-size: 11px; }
+.safety-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.safety-dot--green { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.safety-dot--red   { background: var(--red);   box-shadow: 0 0 6px var(--red); }
+.safety-dot--amber { background: var(--amber);  box-shadow: 0 0 6px var(--amber); }
+
+/* ── News Item ── */
+.news-item {
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: opacity 150ms;
+}
+.news-item:hover { opacity: 0.8; }
+.news-item__source { font-size: 9px; color: var(--text-dim); font-family: var(--font-mono); margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+.news-item__title  { font-size: 12px; color: var(--text-secondary); line-height: 1.4; margin-bottom: 4px; }
+.news-item__sentiment { font-size: 9px; padding: 1px 6px; border-radius: 3px; }
+.sentiment--POSITIVE { background: var(--green-bg); color: var(--green); }
+.sentiment--NEGATIVE { background: var(--red-bg); color: var(--red); }
+.sentiment--NEUTRAL  { background: var(--bg-tertiary); color: var(--text-dim); }
+
+/* ── Browser Panel ── */
+.browser-panel { display: flex; flex-direction: column; height: 100%; }
+.browser-tabs { display: flex; gap: 4px; }
+.browser-tab { padding: 4px 10px; border-radius: 4px; font-size: 11px; cursor: pointer; background: var(--bg-tertiary); border: 1px solid var(--border); color: var(--text-muted); transition: all 150ms; }
+.browser-tab--active { background: var(--blue-bg); color: var(--blue); border-color: var(--blue)44; }
+
+/* ── Animations ── */
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+/* ================================================================
+   Simple View
+   ================================================================ */
+.simple-view {
+  display: flex; flex-direction: column; height: 100%; overflow: auto;
+  padding: 24px; gap: 24px; background: var(--bg-primary);
+}
+
+.simple-hero {
+  background: var(--bg-panel); border: 1px solid var(--border); border-radius: 12px;
+  padding: 28px 32px;
+}
+
+.simple-market-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+}
+
+.simple-bottom {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+}
+
+.simple-card {
+  background: var(--bg-panel); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px;
+}
+
+.simple-card__title {
+  font-size: 11px; color: var(--text-muted); text-transform: uppercase;
+  letter-spacing: 0.5px; font-family: var(--font-mono); margin-bottom: 12px;
+}
+
+/* ================================================================
+   Settings Layout
+   ================================================================ */
+.settings-layout {
+  display: grid; grid-template-columns: 200px 1fr;
+  height: 100%; overflow: hidden;
+}
+
+.settings-nav {
+  background: var(--bg-secondary); border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; overflow-y: auto;
+}
+
+.settings-nav-item {
+  display: flex; align-items: center; padding: 10px 16px;
+  font-size: 12px; color: var(--text-secondary); cursor: pointer;
+  background: none; border: none; text-align: left;
+  border-left: 2px solid transparent; transition: all 150ms;
+}
+.settings-nav-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+.settings-nav-item--active { color: var(--blue); background: var(--blue-bg); border-left-color: var(--blue); }
+
+.settings-content {
+  overflow-y: auto; padding: 32px;
+}
+
+.settings-section { max-width: 800px; margin-bottom: 40px; }
+.settings-section__title {
+  font-size: 16px; font-weight: 700; margin-bottom: 20px;
+  padding-bottom: 12px; border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
+}
+
+/* ================================================================
+   Algo Builder
+   ================================================================ */
+.algo-builder {
+  display: grid; grid-template-columns: 220px 1fr 280px;
+  height: 100%; overflow: hidden;
+}
+
+.algo-sidebar {
+  background: var(--bg-secondary); border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+
+.algo-file-item {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 12px; cursor: pointer; font-size: 12px;
+  transition: background 150ms; color: var(--text-secondary);
+}
+.algo-file-item:hover { background: var(--bg-hover); }
+.algo-file-item--active { background: var(--bg-active); color: var(--text-primary); }
+
+.algo-editor {
+  display: flex; flex-direction: column; overflow: hidden;
+  background: #1e1e1e; /* VS Code background */
+}
+
+.algo-editor-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 12px; background: var(--bg-secondary); border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.algo-right-panel {
+  background: var(--bg-panel); border-left: 1px solid var(--border);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+
+/* ================================================================
+   Analysis Environment
+   ================================================================ */
+.analysis-layout {
+  display: grid; grid-template-columns: 180px 1fr 280px;
+  height: 100%; overflow: hidden;
+}
+
+.analysis-left {
+  background: var(--bg-secondary); border-right: 1px solid var(--border);
+  overflow-y: auto; padding: 12px;
+}
+
+.analysis-center {
+  display: flex; flex-direction: column; overflow: hidden;
+  background: #0d1117;
+}
+
+.analysis-right {
+  background: var(--bg-panel); border-left: 1px solid var(--border);
+  padding: 12px;
+}
+
+.analysis-ai-panel { height: 100%; display: flex; flex-direction: column; }
+
+/* ================================================================
+   Backtest Environment
+   ================================================================ */
+.backtest-layout {
+  display: grid; grid-template-columns: 260px 1fr;
+  height: 100%; overflow: hidden;
+}
+
+.backtest-params {
+  background: var(--bg-secondary); border-right: 1px solid var(--border);
+  padding: 16px; overflow-y: auto;
+}
+
+.backtest-results {
+  display: flex; flex-direction: column; overflow: hidden;
+  background: var(--bg-primary);
+}
+
+/* ================================================================
+   Sync Status
+   ================================================================ */
+.sync-status {
+  position: relative;
+  cursor: default;
+}
